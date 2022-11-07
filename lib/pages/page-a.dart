@@ -19,29 +19,30 @@ class _PageAState extends State<PageA> {
   Widget build(BuildContext context) {
     _counts = Provider.of<CountModel>(context).count;
     return Consumer<CountModel>(
-        builder: (context, CountModel, child) => Container(
-              child: Column(
-                children: [
-                  Container(
-                      margin: EdgeInsets.fromLTRB(0, 50, 0, 50),
-                      child: Text("counts: ${CountModel.count}")),
-                  ElevatedButton(
-                    onPressed: () async {
-                      BrnLoadingDialog.show(context, content: 'Loading');
-                      await Future.delayed(Duration(seconds: 1), () {
-                        print("Finish");
-                        BrnLoadingDialog.dismiss(context);
-                        CountModel.increment();
-                      });
-                    },
-                    child: const Text('increment'),
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.min,
-              ),
-              // ignore: prefer_const_constructors
-              padding: EdgeInsets.only(top: 50),
-            ));
+      builder: (context, CountModel, child) => Container(
+        child: Column(
+          children: [
+            Container(
+                margin: EdgeInsets.fromLTRB(0, 50, 0, 50),
+                child: Text("counts: ${CountModel.count}")),
+            ElevatedButton(
+              onPressed: () async {
+                BrnLoadingDialog.show(context, content: 'Loading');
+                await Future.delayed(Duration(seconds: 1), () {
+                  print("Finish");
+                  BrnLoadingDialog.dismiss(context);
+                  CountModel.increment();
+                });
+              },
+              child: const Text('increment'),
+            )
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
+        ),
+        // ignore: prefer_const_constructors
+        padding: EdgeInsets.only(top: 50),
+      ),
+    );
   }
 }
