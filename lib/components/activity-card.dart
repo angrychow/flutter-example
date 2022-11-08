@@ -4,12 +4,14 @@ class ActivityCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final Function() callback;
-  const ActivityCard(
-      {Key? key,
-      required this.title,
-      required this.subtitle,
-      required this.callback})
-      : super(key: key);
+  final IconData iconData;
+  const ActivityCard({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.callback,
+    this.iconData = Icons.accessible_forward,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class ActivityCard extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(
-                      Icons.accessible_forward,
+                      this.iconData,
                       size: 75,
                     ),
                     title: Text(

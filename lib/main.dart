@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import 'pages/page-a.dart';
 import 'pages/page-b.dart';
 import 'models/counts.dart';
+import 'models/user-info.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (BuildContext context) => CountModel())
+      ChangeNotifierProvider(create: (context) => CountModel()),
+      ChangeNotifierProvider(create: (context) => UserInfoModel()),
     ],
     child: const MaterialApp(
       home: MyApp(),
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         },
         currentIndex: _index,
       ),
-      body: Center(child: _handlePage()),
+      body: _handlePage(),
     );
   }
 
