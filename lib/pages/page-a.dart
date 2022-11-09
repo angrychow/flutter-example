@@ -21,13 +21,13 @@ class _PageAState extends State<PageA> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      BrnLoadingDialog.show(
-        context,
-        content: "Loading",
-        barrierDismissible: false,
-      );
-    }); //这个钩子只会被调用一次，第一次渲染完毕的时候调用这个
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   BrnLoadingDialog.show(
+    //     context,
+    //     content: "Loading",
+    //     barrierDismissible: false,
+    //   );
+    // }); //这个钩子只会被调用一次，第一次渲染完毕的时候调用这个
   }
 
   @override
@@ -38,33 +38,48 @@ class _PageAState extends State<PageA> {
     if (_isLoad) {
       BrnLoadingDialog.dismiss(context);
       return Consumer<UserInfoModel>(
-        builder: (context, UserInfoModel, child) => Container(
-          child: Column(
-            children: [
-              ActivityCard(
-                title: UserInfoModel.userName,
-                subtitle: "年龄 " + UserInfoModel.age.toString(),
-                callback: () {
-                  print("test");
+        builder: (context, UserInfoModel, child) => CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      ActivityCard(
+                        title: UserInfoModel.userName,
+                        subtitle: "年龄 " + UserInfoModel.age.toString(),
+                        callback: () {
+                          print("test");
+                        },
+                        iconData: Icons.account_circle_outlined,
+                      ),
+                      BrnDashedLine(
+                        contentWidget: Container(
+                          height: 50,
+                          // color: Colors.red,
+                          // margin: EdgeInsets.all(5),
+                        ),
+                        dashedThickness: 1,
+                        color: Colors.grey,
+                        axis: Axis.horizontal,
+                        dashedOffset: 5,
+                      ),
+                      ...UserInfoModel.serviceReserve,
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  );
                 },
-                iconData: Icons.tag_faces_outlined,
+                childCount: 1,
               ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
+            ),
+          ],
           // ignore: prefer_const_constructors
           // padding: EdgeInsets.only(top: 50),
         ),
       );
     } else {
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return BrnLoadingDialog(content: "loading");
-      //   },
-      // );
       return Text("");
     }
   }

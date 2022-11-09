@@ -34,12 +34,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Navigation Bar'),
+        title: Text('社区养老APP'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.pages), label: 'Page A'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Page B'),
+          BottomNavigationBarItem(icon: Icon(Icons.pages), label: '我的'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '预约'),
         ],
         onTap: (value) {
           print(value);

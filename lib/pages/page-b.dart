@@ -18,14 +18,14 @@ class _PageAState extends State<PageB> {
   Widget build(BuildContext context) {
     return Container(
       child: ActivityCard(
-        title: "Otto",
-        subtitle: _isSelect ? "这就是不玩原神的下场" : "你玩原神吗",
+        title: "可预约服务1",
+        subtitle: _isSelect ? "已预约" : "未预约",
         callback: () async {
           BrnDialogManager.showSingleButtonDialog(
             context,
-            label: '不玩',
-            title: "你玩原神吗",
-            message: '不玩原神的人，素质品味修养都很低',
+            label: '预约',
+            title: "可预约服务1",
+            message: '点击以确认预约',
             onTap: () {
               setState(() {
                 _isSelect = true;
