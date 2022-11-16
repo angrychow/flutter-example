@@ -4,8 +4,15 @@ import 'pages/page-a.dart';
 import 'pages/page-b.dart';
 import 'models/counts.dart';
 import 'models/user-info.dart';
+import 'utils/fetch.dart';
 
 void main() {
+  try {
+    var ret = fetchData(url: '', method: Method.get);
+    print(ret.toString());
+  } catch (e) {
+    print(e.toString());
+  }
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => CountModel()),

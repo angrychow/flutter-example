@@ -14,6 +14,32 @@ class UserInfoModel extends ChangeNotifier {
   bool get isLoad => _isLoad;
   List<Widget> get serviceReserve => _serviceReserve;
 
+  void refresh() {
+    _serviceReserve = <Widget>[
+      ActivityCard(
+        key: Key('预定服务1'),
+        title: '预定服务1',
+        subtitle: 'description',
+        callback: () {
+          _isLoad = false;
+          getUserInfo();
+        },
+        iconData: Icons.add_alert_sharp,
+      ),
+      ActivityCard(
+        key: Key('预定服务2'),
+        title: '预定服务2',
+        subtitle: 'description',
+        callback: () {
+          _isLoad = false;
+          getUserInfo();
+        },
+        iconData: Icons.tag_faces_outlined,
+      ),
+    ];
+    notifyListeners();
+  }
+
   void getUserInfo() async {
     if (!_isLoad) {
       await Future.delayed(Duration(seconds: 3), () {

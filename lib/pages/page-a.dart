@@ -35,6 +35,7 @@ class _PageAState extends State<PageA> {
     _counts = Provider.of<CountModel>(context).count;
     _isLoad = Provider.of<UserInfoModel>(context).isLoad;
     Provider.of<UserInfoModel>(context).getUserInfo();
+    Function f = Provider.of<UserInfoModel>(context).refresh;
     if (_isLoad) {
       BrnLoadingDialog.dismiss(context);
       return Consumer<UserInfoModel>(
@@ -49,7 +50,7 @@ class _PageAState extends State<PageA> {
                         title: UserInfoModel.userName,
                         subtitle: "年龄 " + UserInfoModel.age.toString(),
                         callback: () {
-                          print("test");
+                          f();
                         },
                         iconData: Icons.account_circle_outlined,
                       ),
