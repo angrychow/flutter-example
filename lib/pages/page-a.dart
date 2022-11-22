@@ -1,9 +1,6 @@
-// ignore_for_file: sort_child_properties_last
-
 import 'package:bruno/bruno.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_1/components/activity-card.dart';
-import '../models/counts.dart';
+import 'package:flutter_application_1/models/event-info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user-info.dart';
@@ -15,31 +12,50 @@ class PageA extends StatefulWidget {
 }
 
 class _PageAState extends State<PageA> {
-  var _counts = 0;
-  var _isLoad = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   BrnLoadingDialog.show(
-    //     context,
-    //     content: "Loading",
-    //     barrierDismissible: false,
-    //   );
-    // }); //这个钩子只会被调用一次，第一次渲染完毕的时候调用这个
-  }
-
   @override
   Widget build(BuildContext context) {
-    _counts = Provider.of<CountModel>(context).count;
-    _isLoad = Provider.of<UserInfoModel>(context).isLoad;
-    Provider.of<UserInfoModel>(context).getUserInfo();
-    Function f = Provider.of<UserInfoModel>(context).refresh;
-    if (_isLoad) {
+    // var _counts = Provider.of<CountModel>(context).count;
+    var _isUserInfoLoad = Provider.of<UserInfoModel>(context).isLoad;
+    var _isEventInfoLoad = Provider.of<EventInfoModel>(context).isLoad;
+
+    if (!_isUserInfoLoad) {
+      Provider.of<UserInfoModel>(context).getUserInfo();
+    }
+    if (!_isEventInfoLoad) {
+      Provider.of<EventInfoModel>(context).getEventInfo();
+    }
+
+    Function refreshUserInfoModel = Provider.of<UserInfoModel>(context).refresh;
+
+    List<Widget> subscribedServices = [];
+    Provider.of<EventInfoModel>(context).events().forEach((e) {
+      if (e.subscribed) {
+        subscribedServices.add(ActivityCard(
+          key: Key(e.title),
+          title: e.title,
+          subtitle: e.subtitle,
+          callback: () async {
+            BrnDialogManager.showSingleButtonDialog(
+              context,
+              label: '取消预约',
+              title: '取消预约' + e.title,
+              message: '点击以取消预约',
+              onTap: () {
+                setState(() {
+                  e.unsubscribe();
+                  Navigator.of(context).pop();
+                });
+              },
+            );
+          },
+        ));
+      }
+    });
+    
+    if (_isUserInfoLoad && _isEventInfoLoad) {
       BrnLoadingDialog.dismiss(context);
       return Consumer<UserInfoModel>(
-        builder: (context, UserInfoModel, child) => CustomScrollView(
+        builder: (context, userInfoModel, child) => CustomScrollView(
           slivers: [
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -47,10 +63,10 @@ class _PageAState extends State<PageA> {
                   return Column(
                     children: [
                       ActivityCard(
-                        title: UserInfoModel.userName,
-                        subtitle: "年龄 " + UserInfoModel.age.toString(),
+                        title: userInfoModel.userName,
+                        subtitle: "年龄 " + userInfoModel.age.toString(),
                         callback: () {
-                          f();
+                          refreshUserInfoModel();
                         },
                         iconData: Icons.account_circle_outlined,
                       ),
@@ -65,7 +81,7 @@ class _PageAState extends State<PageA> {
                         axis: Axis.horizontal,
                         dashedOffset: 5,
                       ),
-                      ...UserInfoModel.serviceReserve,
+                      ...subscribedServices
                     ],
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -81,7 +97,7 @@ class _PageAState extends State<PageA> {
         ),
       );
     } else {
-      return Text("");
+      return Center(child: Text('Loading...'));
     }
   }
 }
