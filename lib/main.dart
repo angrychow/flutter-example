@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'pages/page-a.dart';
 import 'pages/page-b.dart';
-import 'models/counts.dart';
 import 'models/user-info.dart';
+import 'models/event-info.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => CountModel()),
+      // ChangeNotifierProvider(create: (context) => CountModel()),
       ChangeNotifierProvider(create: (context) => UserInfoModel()),
+      ChangeNotifierProvider(create: (context) => EventInfoModel())
     ],
     child: const MaterialApp(
       home: MyApp(),
@@ -27,14 +28,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _index = 0;
-
   List<Widget> _pageList = [PageA(), PageB()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('社区养老APP'),
+        title: Text('社区养老 APP'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
