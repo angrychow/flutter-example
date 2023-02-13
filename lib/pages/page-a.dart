@@ -22,7 +22,8 @@ class _PageAState extends State<PageA> {
       Provider.of<UserInfoModel>(context).getUserInfo();
     }
     if (!_isEventInfoLoad) {
-      Provider.of<EventInfoModel>(context).getEventInfo();
+      Provider.of<EventInfoModel>(context)
+          .getEventInfo(Provider.of<UserInfoModel>(context).getMyToken);
     }
 
     Function refreshUserInfoModel = Provider.of<UserInfoModel>(context).refresh;
@@ -42,6 +43,12 @@ class _PageAState extends State<PageA> {
               message: '点击以取消预约',
               onTap: () {
                 setState(() {
+                  Provider.of<EventInfoModel>(context, listen: false)
+                      .changeSubState(
+                          Provider.of<UserInfoModel>(context, listen: false)
+                              .getMyToken,
+                          e.id,
+                          false);
                   e.unsubscribe();
                   Navigator.of(context).pop();
                 });
@@ -51,7 +58,7 @@ class _PageAState extends State<PageA> {
         ));
       }
     });
-    
+
     if (_isUserInfoLoad && _isEventInfoLoad) {
       BrnLoadingDialog.dismiss(context);
       return Consumer<UserInfoModel>(

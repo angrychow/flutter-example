@@ -22,7 +22,8 @@ class _PageBState extends State<PageB> {
       Provider.of<UserInfoModel>(context).getUserInfo();
     }
     if (!_isEventInfoLoad) {
-      Provider.of<EventInfoModel>(context).getEventInfo();
+      Provider.of<EventInfoModel>(context)
+          .getEventInfo(Provider.of<UserInfoModel>(context).getMyToken);
     }
 
     List<Widget> unsubscribedServices = [];
@@ -40,6 +41,12 @@ class _PageBState extends State<PageB> {
               message: '点击以确认预约',
               onTap: () {
                 setState(() {
+                  Provider.of<EventInfoModel>(context, listen: false)
+                      .changeSubState(
+                          Provider.of<UserInfoModel>(context, listen: false)
+                              .getMyToken,
+                          e.id,
+                          true);
                   e.subscribe();
                   Navigator.of(context).pop();
                 });
@@ -56,7 +63,7 @@ class _PageBState extends State<PageB> {
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 return Column(
                   children: unsubscribedServices,
                   mainAxisAlignment: MainAxisAlignment.start,

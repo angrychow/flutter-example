@@ -1,21 +1,28 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_application_1/models/user-info.dart';
 import 'dart:async';
 import 'dart:io';
 
-enum Method { get, post }
+import 'package:provider/provider.dart';
 
-const baseURL =
-    "https://portal-portm.meituan.com/horn/v1/modules/lx-web-config/prod?_lxsdk_rnd=1847f5435a10";
+enum Method { get, post, patch }
+
+const baseURL = "http://localhost:3000/api/";
 
 Future fetchData({
   required String url,
   required Method method,
   Map<String, dynamic> map = const {},
+  String? myToken,
 }) async {
   try {
     print("start fetching");
+    Options options = myToken != null
+        ? Options(
+            headers: {HttpHeaders.authorizationHeader: "Bearer " + myToken})
+        : Options();
     Response? resp;
     Dio dio = new Dio();
     dio.options.contentType =
@@ -24,26 +31,29 @@ Future fetchData({
       case Method.get:
         print('start get');
         print(baseURL + url);
-        resp = await dio.get(
-          baseURL + url,
-          queryParameters: map,
-        );
+        resp = await dio.get(baseURL + url,
+            queryParameters: map, options: options);
         break;
       case Method.post:
         print("start post");
-        FormData formData = FormData.fromMap(map);
-        resp = await dio.post(url, data: formData);
+        // FormData formData = FormData.fromMap(map);
+        resp = await dio.post(baseURL + url, data: map);
+        break;
+      case Method.patch:
+        resp = await dio.patch(baseURL + url, data: map, options: options);
         break;
     }
-    if (resp != null && resp.data != null && resp.statusCode == 200) {
-      print(resp.data);
-      print(resp.data['lx_max_req_len']);
-      return resp.data;
+    if (resp != null) {
+      print(resp);
+      // print(resp.data['lx_max_req_len']);
+      return resp;
     } else {
-      throw Exception("err");
+      // throw Exception("err");
+      print("err");
     }
   } catch (e) {
-    print(e.toString());
-    throw e;
+    print(e);
+    return false;
+    // throw e;
   }
 }

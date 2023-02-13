@@ -7,11 +7,19 @@ class UserInfoModel extends ChangeNotifier {
   String _userName = '获取中';
   int _age = 0;
   bool _isLoad = false;
+  bool _isLogin = false;
+  String _token = '';
 
   /// getters/setters
   String get userName => _userName;
   int get age => _age;
   bool get isLoad => _isLoad;
+  bool get isLogin => _isLogin;
+  String get getMyToken => _token;
+
+  set changeToken(String token) {
+    _token = token;
+  }
 
   /// actions
   void getUserInfo() async {
@@ -24,6 +32,13 @@ class UserInfoModel extends ChangeNotifier {
       });
     } else {
       return;
+    }
+  }
+
+  void updateLoginState() async {
+    if (!_isLogin) {
+      _isLogin = true;
+      notifyListeners();
     }
   }
 
